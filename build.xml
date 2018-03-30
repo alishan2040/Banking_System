@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="SimpleAccount">
+    <property environment="env"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <path id="JUnit 4.libraryclasspath">
+        <pathelement location="../../.p2/pool/plugins/org.junit_4.12.0.v201504281640/junit.jar"/>
+        <pathelement location="../../.p2/pool/plugins/org.hamcrest.core_1.3.0.v201303031735.jar"/>
+    </path>
+    <path id="SimpleAccount.classpath">
+        <pathelement location="bin"/>
+        <path refid="JUnit 4.libraryclasspath"/>
+    </path>
+              	
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="AccountTesting">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+              	
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+            
+  	<target name="compile" depends="init"
+  	        description="compile the source">
+  	    <!-- Compile the Java code from ${src} into ${build} -->
+  	    <javac includeantruntime="false" srcdir="/home/shan/eclipse-workspace/SimpleAccount/src/com/app" destdir="bin"/>
+  	  </target>
+
+              	
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build_project" name="build"/>
+    <target name="build-subprojects"/>
+    
+    <target depends="init" name="build_project">
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <src path="AccountTesting"/>
+            <classpath refid="SimpleAccount.classpath"/>
+        </javac>
+    </target>
+              	
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+              	
+  	<target name="dist" depends="build_project" description="package, output to JAR">
+
+  			<!-- Create the distribution directory -->
+  			<mkdir dir="${dist.dir}" />
+
+  			<!-- Put everything in ${build} into the {$projectName}-${DSTAMP}.jar file -->
+  			<jar jarfile="${dist.dir}/${projectName}-${DSTAMP}.jar" basedir="bin" >
+  			    <manifest>
+  				<!-- create an executable Jar -->
+  				<attribute name="Main-Class" value="com.app.Accounts.AccountDriver" />
+  			    </manifest>
+  			</jar>
+  		</target>
+          	
+              	
+    <target name="AllTesting" depends="compile, build">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="com.app.Accounts.Testing.AllTests" todir="${junit.output.dir}"/>
+            <jvmarg line="-ea"/>
+            <classpath refid="SimpleAccount.classpath"/>
+        	
+        </junit>
+    </target>
+              	
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
+</project>
